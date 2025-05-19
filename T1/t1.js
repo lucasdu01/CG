@@ -25,10 +25,27 @@ scene.add( axesHelper );
 
 
 // create the ground plane
-let planeBase = createGroundPlaneXZ(20, 20);
+let planeBase = createGroundPlaneXZ(500, 500);
 scene.add(planeBase);
 
+// criando as paredes do plano
+let wallUp = new THREE.Mesh(new THREE.PlaneGeometry(500, 50), new THREE.MeshStandardMaterial({color: 0x00ff00, side: THREE.DoubleSide}));
+wallUp.position.set(0.0, 25.0, -250.0);
+scene.add(wallUp);
 
+let wallDown = new THREE.Mesh(new THREE.PlaneGeometry(500, 50), new THREE.MeshStandardMaterial({color: 0x00ff00, side: THREE.DoubleSide}));
+wallDown.position.set(0.0, 25.0, 250.0);
+scene.add(wallDown);
+
+let wallLeft = new THREE.Mesh(new THREE.PlaneGeometry(500, 50), new THREE.MeshStandardMaterial({color: 0x00ff00, side: THREE.DoubleSide}));
+wallLeft.position.set(-250.0, 25.0 ,0.0);
+wallLeft.rotateY(Math.PI / 2);
+scene.add(wallLeft);
+
+let wallRight = new THREE.Mesh(new THREE.PlaneGeometry(500, 50), new THREE.MeshStandardMaterial({color: 0x00ff00, side: THREE.DoubleSide}));
+wallRight.position.set(250.0, 25.0 ,0.0);
+wallRight.rotateY(Math.PI / 2);
+scene.add(wallRight);
 
 // create a cube
 let cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
@@ -37,7 +54,7 @@ let cube = new THREE.Mesh(cubeGeometry, material);
 // position the cube
 cube.position.set(0.0, 2.0, 0.0);
 // add the cube to the scene
-scene.add(cube);
+
 
 // Use this to show information onscreen
 let controls = new InfoBox();
