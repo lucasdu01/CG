@@ -1,4 +1,5 @@
 import * as THREE from  'three';
+import { createStaircaseWithCollision } from './staircaseComponent.js';
 import { OrbitControls } from '../build/jsm/controls/OrbitControls.js';
 import {initRenderer, 
         initCamera,
@@ -11,7 +12,7 @@ import {initRenderer,
 let scene, renderer, camera, green, red, blue, purple, light, orbit; // Initial variables
 scene = new THREE.Scene();    // Create main scene
 renderer = initRenderer();    // Init a basic renderer
-camera = initCamera(new THREE.Vector3(0, 500, 30)); // Init camera in this position
+camera = initCamera(new THREE.Vector3(0, 300, 30)); // Init camera in this position
 green = new THREE.MeshStandardMaterial({ color: '#D1FFBD' });
 red = new THREE.MeshStandardMaterial({ color: '#FF7F7F' });
 blue = new THREE.MeshStandardMaterial({ color: '#90D5FF' });
@@ -51,26 +52,40 @@ wallRight.rotateY(Math.PI / 2);
 scene.add(wallRight);
 
 // create the three smaller areas
-let areaGeometry = new THREE.BoxGeometry(100, 10, 100);
+let areaGeometry = new THREE.BoxGeometry(100, 8, 100);
 let area1 = new THREE.Mesh(areaGeometry, green); // area 1
 let area2 = new THREE.Mesh(areaGeometry, red); // area 2
 let area3 = new THREE.Mesh(areaGeometry, blue); // area 3
-// create the area 4
-let areaGeometryLarge =new THREE.BoxGeometry(250, 10, 150);
+// create area 4
+let areaGeometryLarge =new THREE.BoxGeometry(250, 8, 150);
 let area4 = new THREE.Mesh(areaGeometryLarge, purple);
 // position the areas
-area1.position.set(-150.0, 5.0, 150.0);
-area2.position.set(0.0, 5.0, 150.0);
-area3.position.set(150.0, 5.0, 150.0);
-// posision the area 4
-area4.position.set(0.0, 5.0, -150.0);
+area1.position.set(-150.0, 4.0, 150.0);
+area2.position.set(0.0, 4.0, 150.0);
+area3.position.set(150.0, 4.0, 150.0);
+area4.position.set(0.0, 4.0, -150.0);
 // add the areas to the scene
 scene.add(area1);
 scene.add(area2);
 scene.add(area3);
 scene.add(area4);
 
+//create stairs
+const staircase1 = createStaircaseWithCollision({color: '#FFFF00'});
+const staircase2 = createStaircaseWithCollision({color: '#FFFF00'});
+const staircase3 = createStaircaseWithCollision({color: '#FFFF00'});
+const staircase4 = createStaircaseWithCollision({color: '#FFFF00'});
 
+//add staircases to the areas
+area1.add(staircase1);
+staircase1.position.set(0,-3.5,-60);
+area2.add(staircase2);
+staircase2.position.set(0,-3.5,-60);
+area3.add(staircase3);
+staircase3.position.set(0,-3.5,-60);
+area4.add(staircase4);
+staircase4.position.set(0,-3.5,85);
+staircase4.rotateY(Math.PI);
 
 // Use this to show information onscreen
 let controls = new InfoBox();
@@ -83,6 +98,7 @@ let controls = new InfoBox();
   controls.show();
 
 render();
+
 function render()
 {
   requestAnimationFrame(render);
