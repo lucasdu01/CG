@@ -8,11 +8,13 @@ import {initRenderer,
         onWindowResize,
         createGroundPlaneXZ,} from "../libs/util/util.js";
 
-let scene, renderer, camera, material, light, orbit; // Initial variables
+let scene, renderer, camera, green, red, blue, light, orbit; // Initial variables
 scene = new THREE.Scene();    // Create main scene
 renderer = initRenderer();    // Init a basic renderer
 camera = initCamera(new THREE.Vector3(0, 15, 30)); // Init camera in this position
-material = setDefaultMaterial(); // create a basic material
+green = new THREE.MeshStandardMaterial({ color: '#D1FFBD' });
+red = new THREE.MeshStandardMaterial({ color: '#FF7F7F' });
+blue = new THREE.MeshStandardMaterial({ color: '#90D5FF' });
 light = initDefaultBasicLight(scene); // Create a basic light to illuminate the scene
 orbit = new OrbitControls( camera, renderer.domElement ); // Enable mouse rotation, pan, zoom etc.
 
@@ -47,14 +49,19 @@ wallRight.position.set(250.0, 25.0 ,0.0);
 wallRight.rotateY(Math.PI / 2);
 scene.add(wallRight);
 
-// create a cube
-let cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
-let cube = new THREE.Mesh(cubeGeometry, material);
-
-// position the cube
-cube.position.set(0.0, 2.0, 0.0);
-// add the cube to the scene
-
+// create the three smaller areas
+let areaGeometry = new THREE.BoxGeometry(100, 10, 100);
+let area1 = new THREE.Mesh(areaGeometry, green); // area 1
+let area2 = new THREE.Mesh(areaGeometry, red); // area 2
+let area3 = new THREE.Mesh(areaGeometry, blue); // area 3
+// position the areas
+area1.position.set(-150.0, 5.0, 150.0);
+area2.position.set(0.0, 5.0, 150.0);
+area3.position.set(150.0, 5.0, 150.0);
+// add the areas to the scene
+scene.add(area1);
+scene.add(area2);
+scene.add(area3);
 
 // Use this to show information onscreen
 let controls = new InfoBox();
