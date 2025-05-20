@@ -27,6 +27,9 @@ window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)},
 let axesHelper = new THREE.AxesHelper( 12 );
 scene.add( axesHelper );
 
+// Grid helper
+let gridHelper = new THREE.GridHelper( 500, 500 );
+scene.add( gridHelper );
 
 // create the ground plane
 let planeBase = createGroundPlaneXZ(500, 500);
@@ -86,6 +89,22 @@ staircase3.position.set(0,-3.5,-60);
 area4.add(staircase4);
 staircase4.position.set(0,-3.5,85);
 staircase4.rotateY(Math.PI);
+
+// Blocos ao lado da escada
+let blockGeometry = new THREE.BoxGeometry(40, 8, 12);
+let blockMaterial = new THREE.MeshStandardMaterial({ color: '#12AF10' }); // mesma cor da escada
+
+let blockLeft1 = new THREE.Mesh(blockGeometry, blockMaterial);
+let blockRight1 = new THREE.Mesh(blockGeometry, blockMaterial);
+
+// Posiciona os blocos em relação à escada
+blockLeft1.position.set(-30, 0, -56);
+blockRight1.position.set(30, 0, -56);
+
+// Adiciona os blocos à área
+area1.add(blockLeft1);
+area1.add(blockRight1);
+
 
 // Use this to show information onscreen
 let controls = new InfoBox();
