@@ -90,21 +90,40 @@ area4.add(staircase4);
 staircase4.position.set(0,-3.5,85);
 staircase4.rotateY(Math.PI);
 
-// Blocos ao lado da escada
-let blockGeometry = new THREE.BoxGeometry(40, 8, 12);
-let blockMaterial = new THREE.MeshStandardMaterial({ color: '#12AF10' }); // mesma cor da escada
-
+// Blocos ao lado da escada das áreas 1 a 3
+let blockGeometry = new THREE.BoxGeometry(40, 8, 11.5);
+let blockMaterial = new THREE.MeshStandardMaterial({ color: '#12AF10' });
 let blockLeft1 = new THREE.Mesh(blockGeometry, blockMaterial);
 let blockRight1 = new THREE.Mesh(blockGeometry, blockMaterial);
 
-// Posiciona os blocos em relação à escada
-blockLeft1.position.set(-30, 0, -56);
-blockRight1.position.set(30, 0, -56);
+
+// Posiciona os blocos
+blockLeft1.position.set(-30, 0, -55.5);
+blockRight1.position.set(30, 0, -55.5);
 
 // Adiciona os blocos à área
 area1.add(blockLeft1);
 area1.add(blockRight1);
 
+area2.add(blockLeft1.clone());
+area2.add(blockRight1.clone());
+
+area3.add(blockLeft1.clone());
+area3.add(blockRight1.clone());
+
+// Blocos ao lado da escada da área 4
+let blockGeometry2 = new THREE.BoxGeometry(115, 8, 11.5);
+let blockMaterial2 = new THREE.MeshStandardMaterial({ color: '#F67828' });
+let blockLeft2 = new THREE.Mesh(blockGeometry2, blockMaterial2);
+let blockRight2 = new THREE.Mesh(blockGeometry2, blockMaterial2);
+
+// Posiciona os blocos
+blockLeft2.position.set(-67.5, 0, 80.5);
+blockRight2.position.set(67.5, 0, 80.5);
+
+// Adiciona os blocos à área
+area4.add(blockLeft2);
+area4.add(blockRight2);
 
 // Use this to show information onscreen
 let controls = new InfoBox();
