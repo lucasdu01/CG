@@ -1,11 +1,11 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 
-export function createStaircaseWithCollision({
+export function createStair({
   stepCount = 8,
   stepWidth = 20,
   stepHeight = 1,
   stepDepth = 2.5,
-  color = '',
+  color = "",
   material = new THREE.MeshStandardMaterial({ color:color }),
 }) {
   const group = new THREE.Group();

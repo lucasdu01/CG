@@ -1,106 +1,60 @@
-import * as THREE from  'three';
-import { createStaircaseWithCollision } from './staircaseComponent.js';
-import { OrbitControls } from '../build/jsm/controls/OrbitControls.js';
-import {initRenderer, 
-        initCamera,
-        initDefaultBasicLight,
-        setDefaultMaterial,
-        InfoBox,
-        onWindowResize,
-        createGroundPlaneXZ,} from "../libs/util/util.js";
+import * as THREE from "three";
+import MATERIALS from "./components/materials.js";
+import { OrbitControls } from "../build/jsm/controls/OrbitControls.js";
+import { createWall } from "./components/walls.js";
+import { createArea } from "./components/areas.js";
+import { createGroundPlaneXZ } from "./components/groundPlane.js";
+import { addBlockandStairToArea, addBlocksToArea, addStairToArea } from "./util.js";
+import { areaGeometrySmall, areaGeometryLarge, blockGeometrySmall, blockGeometryLarge, wallGeometry, groundPlaneGeometry, block1area1Geometry } from "./components/geometries.js";
+import { initRenderer, initCamera, initDefaultBasicLight, onWindowResize } from "../libs/util/util.js";
 
-let scene, renderer, camera, green, red, blue, purple, light, orbit; // Initial variables
-scene = new THREE.Scene();    // Create main scene
-renderer = initRenderer();    // Init a basic renderer
-camera = initCamera(new THREE.Vector3(0, 300, 30)); // Init camera in this position
-green = new THREE.MeshStandardMaterial({ color: '#D1FFBD' });
-red = new THREE.MeshStandardMaterial({ color: '#FF7F7F' });
-blue = new THREE.MeshStandardMaterial({ color: '#90D5FF' });
-purple = new THREE.MeshStandardMaterial({ color: '#A77BFF' });
-light = initDefaultBasicLight(scene); // Create a basic light to illuminate the scene
-orbit = new OrbitControls( camera, renderer.domElement ); // Enable mouse rotation, pan, zoom etc.
+// Inicialização da cena e utilitárioss
+const scene = new THREE.Scene();
+const renderer = initRenderer();
+const camera = initCamera(new THREE.Vector3(0, 500, 0));
+initDefaultBasicLight(scene);
+const orbit = new OrbitControls(camera, renderer.domElement);
 
-// Listen window size changes
-window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)}, false );
+window.addEventListener("resize", () => onWindowResize(camera, renderer), false);
 
-// Show axes (parameter is size of each axis)
-let axesHelper = new THREE.AxesHelper( 12 );
-scene.add( axesHelper );
+// Eixos e grid
+scene.add(new THREE.AxesHelper(12));
+scene.add(new THREE.GridHelper(500, 500));
 
+// Plano base
+const groundPlane = createGroundPlaneXZ(groundPlaneGeometry, MATERIALS.groundPlane);
+scene.add(groundPlane);
 
-// create the ground plane
-let planeBase = createGroundPlaneXZ(500, 500);
-scene.add(planeBase);
+// Paredes (largura, altura, posição, rotação)
+const wallUp = createWall(wallGeometry, MATERIALS.wall, [0, 25, -250]);
+const wallDown = createWall(wallGeometry, MATERIALS.wall, [0, 25, 250]);
+const wallLeft = createWall(wallGeometry, MATERIALS.wall, [-250, 25, 0], Math.PI / 2);
+const wallRight = createWall(wallGeometry, MATERIALS.wall, [250, 25, 0], Math.PI / 2);
+scene.add(wallUp, wallDown, wallLeft, wallRight);
 
-// criando as paredes do plano
-let wallUp = new THREE.Mesh(new THREE.PlaneGeometry(500, 50), new THREE.MeshStandardMaterial({color: 0x00ff00, side: THREE.DoubleSide}));
-wallUp.position.set(0.0, 25.0, -250.0);
-scene.add(wallUp);
+// Areas
+const area1 = createArea(areaGeometrySmall, MATERIALS.lightgreen, [-150, 4, -150]);
+const area2 = createArea(areaGeometrySmall, MATERIALS.red, [0, 4, -150]);
+const area3 = createArea(areaGeometrySmall, MATERIALS.blue, [150, 4, -150]);
+const area4 = createArea(areaGeometryLarge, MATERIALS.green, [0, 4, 150]);
+scene.add(area1, area2, area3, area4);
 
-let wallDown = new THREE.Mesh(new THREE.PlaneGeometry(500, 50), new THREE.MeshStandardMaterial({color: 0x00ff00, side: THREE.DoubleSide}));
-wallDown.position.set(0.0, 25.0, 250.0);
-scene.add(wallDown);
+// Adiciona escadas
+addStairToArea(area1, [0, -3.5, 60], Math.PI);
+addStairToArea(area2, [0, -3.5, 60], Math.PI);
+addStairToArea(area3, [0, -3.5, 60], Math.PI);
+addStairToArea(area4, [0, -3.5, -85], 0);
 
-let wallLeft = new THREE.Mesh(new THREE.PlaneGeometry(500, 50), new THREE.MeshStandardMaterial({color: 0x00ff00, side: THREE.DoubleSide}));
-wallLeft.position.set(-250.0, 25.0 ,0.0);
-wallLeft.rotateY(Math.PI / 2);
-scene.add(wallLeft);
-
-let wallRight = new THREE.Mesh(new THREE.PlaneGeometry(500, 50), new THREE.MeshStandardMaterial({color: 0x00ff00, side: THREE.DoubleSide}));
-wallRight.position.set(250.0, 25.0 ,0.0);
-wallRight.rotateY(Math.PI / 2);
-scene.add(wallRight);
-
-// create the three smaller areas
-let areaGeometry = new THREE.BoxGeometry(100, 8, 100);
-let area1 = new THREE.Mesh(areaGeometry, green); // area 1
-let area2 = new THREE.Mesh(areaGeometry, red); // area 2
-let area3 = new THREE.Mesh(areaGeometry, blue); // area 3
-// create area 4
-let areaGeometryLarge =new THREE.BoxGeometry(250, 8, 150);
-let area4 = new THREE.Mesh(areaGeometryLarge, purple);
-// position the areas
-area1.position.set(-150.0, 4.0, 150.0);
-area2.position.set(0.0, 4.0, 150.0);
-area3.position.set(150.0, 4.0, 150.0);
-area4.position.set(0.0, 4.0, -150.0);
-// add the areas to the scene
-scene.add(area1);
-scene.add(area2);
-scene.add(area3);
-scene.add(area4);
-
-//create stairs
-const staircase1 = createStaircaseWithCollision({color: '#FFFF00'});
-const staircase2 = createStaircaseWithCollision({color: '#FFFF00'});
-const staircase3 = createStaircaseWithCollision({color: '#FFFF00'});
-const staircase4 = createStaircaseWithCollision({color: '#FFFF00'});
-
-//add staircases to the areas
-area1.add(staircase1);
-staircase1.position.set(0,-3.5,-60);
-area2.add(staircase2);
-staircase2.position.set(0,-3.5,-60);
-area3.add(staircase3);
-staircase3.position.set(0,-3.5,-60);
-area4.add(staircase4);
-staircase4.position.set(0,-3.5,85);
-staircase4.rotateY(Math.PI);
-
-// Use this to show information onscreen
-let controls = new InfoBox();
-  controls.add("Basic Scene");
-  controls.addParagraph();
-  controls.add("Use mouse to interact:");
-  controls.add("* Left button to rotate");
-  controls.add("* Right button to translate (pan)");
-  controls.add("* Scroll to zoom in/out.");
-  controls.show();
+// Adiciona blocos
+addBlocksToArea(area1, blockGeometrySmall, MATERIALS.lightgreen, [[-30, 0, 55.5], [30, 0, 55.5]]);
+addBlocksToArea(area2, blockGeometrySmall, MATERIALS.red, [[-30, 0, 55.5], [30, 0, 55.5]]);
+addBlocksToArea(area3, blockGeometrySmall, MATERIALS.blue, [[-30, 0, 55.5], [30, 0, 55.5]]);
+addBlocksToArea(area4, blockGeometryLarge, MATERIALS.green, [[-67.5, 0, -80.5], [67.5, 0, -80.5]]);
 
 render();
 
-function render()
-{
+// Renderização
+function render() {
   requestAnimationFrame(render);
-  renderer.render(scene, camera) // Render scene
+  renderer.render(scene, camera);
 }
