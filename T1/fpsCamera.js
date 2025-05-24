@@ -17,13 +17,6 @@ export function createFPSCamera(renderer, scene) {
   const sensitivity = 0.002;
   const keyboard = new KeyboardState();
 
-  // Mouse look
-  document.body.addEventListener("click", () => {
-    if (!isPointerLocked) {
-      document.body.requestPointerLock();
-    }
-  });
-
   document.addEventListener("pointerlockchange", () => {
     isPointerLocked = document.pointerLockElement === document.body;
   });
@@ -37,11 +30,9 @@ export function createFPSCamera(renderer, scene) {
     yawObject.rotation.y -= movementX * sensitivity;
     pitchObject.rotation.x -= movementY * sensitivity;
 
-    // Limita a rotação vertical
     pitchObject.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitchObject.rotation.x));
   });
 
-  // Movimentação
   function updateMovement() {
     keyboard.update();
 
@@ -60,7 +51,6 @@ export function createFPSCamera(renderer, scene) {
     yawObject.position.addScaledVector(direction, moveSpeed);
   }
 
-  // Resize handler
   window.addEventListener("resize", () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
