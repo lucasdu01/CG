@@ -1,3 +1,4 @@
+/* Mira */
 #crosshair {
   position: fixed;
   top: 50%;
@@ -19,6 +20,7 @@
   background: white;
 }
 
+/* Tela Inicial */
 #start-screen {
   position: fixed;
   top: 0;
@@ -39,9 +41,34 @@
   text-align: center;
 }
 
-#start-button {
+/* Tela de Pausa */
+#pause-screen {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Botões Padronizados */
+.ui-button {
   margin-top: 20px;
-  padding: 10px 20px;
+  padding: 12px 24px;
   font-size: 18px;
   cursor: pointer;
+  background-color: white;
+  border: none;
+  border-radius: 6px;
+  transition: background 0.3s;
+}
+
+.ui-button:hover {
+  background-color: #ccc;
 }
