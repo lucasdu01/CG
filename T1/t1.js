@@ -55,6 +55,23 @@ addBlockandStairToArea(area2, [30, -3.5, 60], Math.PI);
 addBlockandStairToArea(area3, [0, -3.5, 60], Math.PI);
 addBlockandStairToArea(area4, [0, -3.5, -85], 0);
 
+// Personagem
+const characterGeometry = new THREE.BoxGeometry(4, 7, 3); // largura, altura, profundidade
+const characterMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
+const character = new THREE.Mesh(characterGeometry, characterMaterial);
+character.position.set(0, 2, 0); // altura do centro do cubo = altura / 2
+scene.add(character);
+
+// Arma (cilindro no braço direito)
+const weaponGeometry = new THREE.CylinderGeometry(0.5, 0.5, 5, 16);
+const weaponMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
+const weapon = new THREE.Mesh(weaponGeometry, weaponMaterial);
+
+// Ajustes de posição e rotação
+weapon.rotation.z = -(Math.PI * 0.9) / 2; // inclinação para cima
+weapon.position.set(2.5, 2, 1.5); // próximo ao "braço" direito
+character.add(weapon);
+
 // Loop de renderização
 function render() {
   requestAnimationFrame(render);
